@@ -42,7 +42,6 @@ def login(request):
                 # para onde ele vai depois de logar?
                 return redirect('lista_projetos')
             else:
-            # Coloque este print aqui para o Django "dedurar" o erro:
                 print("🚨 ERROS DO LOGIN:", form.errors)
     else:
         form = AuthenticationForm()
