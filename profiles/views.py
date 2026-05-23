@@ -11,7 +11,7 @@ def register(request):
         form = ProfileCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login')
+            return redirect('profile:login')
         
     else:
         form = ProfileCreationForm()
@@ -30,21 +30,24 @@ def login(request):
         if form.is_valid():
             # Pegamos o usuário e senha digitado
             usuario = form.cleaned_data.get('username')
-            senha = form.cleaned_data.get()
+            senha = form.cleaned_data.get('password')
 
             # authenticate() vai no banco de dados e checa se tão correto
-            user = authenticate(username=usuario, passwrod=senha)
+            user = authenticate(username=usuario, password=senha)
 
             if user is not None:
                 #auth login é oq loga
                 auth_login(request, user)
 
                 # para onde ele vai depois de logar?
-                return redirect('profile:reg')
-        else:
-            form = AuthenticationForm()
-        context = {
-            'form':form
-        }
-        return render(request, 'login.html', context)
+                return redirect('lista_projetos')
+            else:
+            # Coloque este print aqui para o Django "dedurar" o erro:
+                print("🚨 ERROS DO LOGIN:", form.errors)
+    else:
+        form = AuthenticationForm()
+    context = {
+        'form':form
+    }
+    return render(request, 'login.html', context)
 
