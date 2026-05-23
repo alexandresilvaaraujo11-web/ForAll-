@@ -4,4 +4,4 @@ from .models import Projeto
 class ForumForm (ModelForm):
     class Meta:
         model = Projeto
-        fields = ['curso','titulo','descricao','criador_nome','participantes_qtd','criado_em']
+        fields = ['curso','titulo','descricao','criador_nome','participantes_qtd']
