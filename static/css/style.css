@@ -551,6 +551,16 @@
 
   box-shadow: 0 10px 30px rgba(0,0,0,.05);
 }
+.auth-card-login{
+    max-width: 420;
+
+} 
+
+.auth-card-register{
+    max-width: 600px;
+
+} 
+
 
 .auth-card h2 {
   margin-bottom: 24px;
@@ -933,4 +943,223 @@ textarea:disabled {
 .toast {
   /* Se já tiver algum "animation:" no seu .toast, substitua por este: */
   animation: slideInRightBounce 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* ── Textos de Ajuda e Erros (Django Forms) ── */
+
+/* 1. Helptext (Dicas abaixo do campo) */
+.helptext {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  margin-top: 6px;
+  line-height: 1.4;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* 2. Errorlist (Container da lista de erros) */
+ul.errorlist {
+  list-style-type: none; /* Remove aquelas bolinhas pretas feias da lista */
+  padding: 0;
+  margin: 6px 0 12px 0;
+}
+
+/* 3. Estilo de cada erro individual (li) */
+ul.errorlist li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #dc2626; /* Aquele mesmo vermelho elegante que usamos no botão */
+  background-color: #fef2f2; /* Fundo vermelhinho bem claro */
+  padding: 8px 12px;
+  border-left: 3px solid #dc2626; /* Bordinha lateral para dar um charme e chamar atenção */
+  border-radius: 6px;
+  margin-bottom: 4px;
+  font-family: 'DM Sans', sans-serif;
+  animation: fadeUpError 0.3s ease forwards; /* Uma animação suave de entrada */
+}
+
+/* Animação para o erro não aparecer de forma "dura" na tela */
+@keyframes fadeUpError {
+  from { opacity: 0; transform: translateY(-5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Lista de Requisitos de Senha do Django (ul sem classe) ── */
+
+/* Captura as 'ul' dentro de formulários, ignorando a '.errorlist' */
+form ul:not(.errorlist) {
+  list-style-type: none; 
+  padding: 0;
+  margin: -8px 0 16px 0; 
+}
+
+/* Estilo do texto de cada regra */
+form ul:not(.errorlist) li {
+  font-size: 0.82rem;
+  color: var(--gray-500); 
+  margin-bottom: 6px;
+  line-height: 1.4;
+  font-family: 'DM Sans', sans-serif;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+/* Criando um marcador (bullet) customizado e moderno */
+form ul:not(.errorlist) li::before {
+  content: "✓"; 
+  color: var(--blue); 
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+
+/* ── Checkboxes Customizados ── */
+/* ── Checkboxes Customizados ── */
+
+/* 1. Estilo do Label (alinha o texto com o quadrado) */
+label:has(input[type="checkbox"]) {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--gray-700);
+  cursor: pointer;
+  margin-bottom: 6px;
+  font-family: 'DM Sans', sans-serif;
+  transition: color 0.2s ease-in-out;
+}
+
+label:has(input[type="checkbox"]):hover {
+  color: var(--gray-900);
+}
+
+/* 2. Esconde o checkbox padrão e cria um novo quadrado */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--gray-300);
+  border-radius: 6px;
+  background-color: var(--white);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+  flex-shrink: 0;
+}
+
+/* 3. O que acontece quando ele é marcado (Com o "V" Corrigido em SVG) */
+input[type="checkbox"]:checked {
+  background-color: var(--blue);
+  border-color: var(--blue);
+  
+  /* Adiciona o "V" branco perfeito */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='20 6 9 17 4 12'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 13px;
+}
+
+/* 4. Efeito de Foco (quando o usuário navega pelo teclado) */
+input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+/* 5. Efeito de Foco (quando o usuário navega pelo teclado) */
+input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+
+/* ── Dropdown com Checkboxes (Usando Details/Summary) ── */
+
+/* O container principal */
+.dropdown-checkbox {
+  width: 100%;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius);
+  background-color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  transition: border-color 0.2s;
+}
+
+/* O botão que a pessoa clica */
+.dropdown-checkbox summary {
+  padding: 0.85rem 1rem;
+  font-size: 0.95rem;
+  color: var(--gray-700);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+/* Tira a setinha padrão do Chrome/Safari */
+.dropdown-checkbox summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Criando a nossa própria setinha moderna */
+.dropdown-checkbox summary::after {
+  content: "▼";
+  font-size: 0.7rem;
+  color: var(--gray-500);
+  transition: transform 0.3s ease;
+}
+
+/* Quando o menu está aberto, a setinha gira para cima e a borda muda */
+.dropdown-checkbox[open] summary::after {
+  transform: rotate(180deg);
+}
+
+.dropdown-checkbox[open] {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.dropdown-checkbox[open] summary {
+  border-bottom: 1px solid var(--gray-200);
+}
+
+/* A caixa onde os checkboxes vão ficar */
+.dropdown-list {
+  padding: 12px;
+  max-height: 220px;
+  overflow-y: auto; 
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Estilizando a barrinha de rolagem para ficar elegante */
+.dropdown-list::-webkit-scrollbar {
+  width: 6px;
+}
+.dropdown-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.dropdown-list::-webkit-scrollbar-thumb {
+  background-color: var(--gray-300);
+  border-radius: 10px;
+}
+
+/* ── Ajustes para Celular (Telas até 600px) ── */
+@media (max-width: 600px) {
+  
+  /* Aumenta a largura do card de login/registro */
+  .auth-card-register {
+    width: 100%; /* Faz o card ocupar quase a tela toda, deixando só uma bordinha de 2.5% de cada lado */
+    max-width: none; /* Remove qualquer limite de largura máxima que estava segurando ele */
+    padding: 1.5rem 1rem; /* Diminui um pouquinho o espaço interno nas laterais para caber mais texto */
+  }
+
 }
