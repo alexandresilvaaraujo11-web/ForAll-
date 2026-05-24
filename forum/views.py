@@ -66,3 +66,14 @@ def delete_projeto(request, pk):
     projeto = get_object_or_404(Projeto, pk=pk)
     projeto.delete()
     return redirect('lista_projetos') 
+
+@login_required 
+def deletar_projeto(request, projeto_id):
+    projeto = get_object_or_404(Projeto, id=projeto_id)
+    if projeto.criador != request.user:
+        messages.error(request, "Você não tem permissão para deletar este projeto.")
+        return redirect('lista_projetos')     
+    if request.method == 'POST':
+        projeto.delete()
+        messages.success(request, "Projeto deletado com sucesso!") 
+    return redirect('lista_projetos')
