@@ -623,7 +623,6 @@
   color: var(--primary);
 }
 
-<<<<<<< HEAD
 /* ── Select (Aplicado diretamente na tag) ── */
 select {
   width: 100%;
@@ -671,7 +670,7 @@ select option {
   color: var(--gray-900);
   font-size: 0.95rem;
   padding: 10px;
-=======
+}
 /* ── Textarea ── */
 textarea {
   width: 100%;
@@ -934,5 +933,4 @@ textarea:disabled {
 .toast {
   /* Se já tiver algum "animation:" no seu .toast, substitua por este: */
   animation: slideInRightBounce 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
->>>>>>> f4bf8155aba54d36cd42bd081ddf5ffb7bf4d795
 }
