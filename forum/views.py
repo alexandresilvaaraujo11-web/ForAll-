@@ -1,6 +1,7 @@
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .models import Projeto
 from .forms import ForumForm
 from profiles.models import Cursos
@@ -49,6 +50,7 @@ def novo_projeto(request):
             projeto.criador = request.user
             projeto.save()
             form.save_m2m() #salva as alterações do curso selecionavel
+        messages.success(request, 'Projeto criado com sucesso!')
         return redirect('lista_projetos')
     else:
         template_name = 'form_forum.html'
