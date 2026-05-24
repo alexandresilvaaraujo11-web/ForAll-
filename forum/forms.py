@@ -7,5 +7,5 @@ class ForumForm (ModelForm):
         fields = ['curso','titulo','descricao','participantes_qtd']
 
         widgets = {
-            'cursos':CheckboxSelectMultiple(),
+            'curso':CheckboxSelectMultiple(),
         }

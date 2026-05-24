@@ -61,16 +61,14 @@
   <div class="grid">
     {% for p in projetos %}
       <div class="card">
+
         <div class="card-top">
-        <div class="badges-wrap">
-          {% for curso_vinculado in p.cursos.all %}
+        <div class="badges-wrap" style="display: flex; flex-wrap: wrap; gap: 4px;">
+          {% for curso_vinculado in p.curso.all %}
             <span class ="badge">{{ curso_vinculado.curso }}</span>
           {% empty %}
             <span class="badge" style="background: #999;">Sem curso</span>
           {% endfor %}
-        </div>
-
-
         </div>
           <span class="card-date">{{ p.criado_em|date:"d/m/Y" }}</span>
         </div>
