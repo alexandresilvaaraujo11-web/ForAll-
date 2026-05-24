@@ -120,3 +120,6 @@ USE_TZ = True
 STATIC_URL = 'static/'
 # PRA FUNCIONAR OS USUÁRIOS
 AUTH_USER_MODEL = 'profiles.Profile'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
