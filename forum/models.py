@@ -1,10 +1,15 @@
 from django.db import models
+from django.conf import settings
 
 class Projeto(models.Model):
     curso = models.CharField(max_length=100)
     titulo = models.CharField(max_length=200)
     descricao = models.TextField()
-    criador_nome = models.CharField(max_length=150)
+    criador=models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        related_name='projetos'
+    )
     participantes_qtd = models.IntegerField(default=1)
     criado_em = models.DateTimeField(auto_now_add=True)
 

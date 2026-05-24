@@ -25,7 +25,10 @@
                 <h2>{{ projeto.titulo }}</h2>
                 <div class="info">
                     <strong>Curso:</strong> {{ projeto.curso }} | 
-                    <strong>Criado por:</strong> {{ projeto.criador_nome }}
+                    <strong>Criado por:</strong> {{ projeto.criador.username }} <br>
+                {% if projeto.criador.curso %}
+                    <strong>Curso do Criador:</strong> {{ projeto.criador.curso.curso }}
+                {% endif %}
                 </div>
                 <p class="desc">{{ projeto.descricao }}</p>
                 <a href="{% url 'deletar_projeto' projeto.pk %}">Deletar</a>
