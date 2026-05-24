@@ -51,6 +51,7 @@ def novo_projeto(request):
             projeto=form.save(commit=False)
             projeto.criador = request.user
             projeto.save()
+            form.save_m2m() #salva as alterações do curso selecionavel
         return redirect('lista_projetos')
     else:
         template_name = 'form_forum.html'
