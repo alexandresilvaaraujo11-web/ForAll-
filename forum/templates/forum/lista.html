@@ -1,5 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
+
+
+{% if messages %}
+  <div class="toast-container">
+    {% for message in messages %}
+      <div class="toast {% if message.tags %}toast-{{ message.tags }}{% endif %}">
+        
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="toast-icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        
+        <span>{{ message }}</span>
+        
+        <button class="toast-close" onclick="this.parentElement.remove()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+
   <form method="get" class="search-filter">
     <div class="search-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

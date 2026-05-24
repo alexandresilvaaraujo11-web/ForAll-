@@ -4,7 +4,7 @@ from .forms import ProfileCreationForm
 
 #   imports pra login
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login, logout
 
 def register(request):
     if request.method == 'POST':
@@ -49,4 +49,8 @@ def login(request):
         'form':form
     }
     return render(request, 'login.html', context)
+
+def logout_profile(request):
+    logout(request)
+    return redirect('lista_projetos')
 
