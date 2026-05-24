@@ -1,42 +1,123 @@
 {% extends 'base.html' %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Fórum de Projetos</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; }
-        h1 { color: #333; text-align: center; }
-        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .card h2 { margin-top: 0; color: #007bff; }
-        .info { color: #666; font-size: 14px; margin-bottom: 10px; }
-        .desc { color: #444; line-height: 1.6; }
-    </style>
 
-</head>
-<body>
-    <div class="container">
-        <h1>Projetos Cadastrados</h1>
+
+{% if messages %}
+  <div class="toast-container">
+    {% for message in messages %}
+      <div class="toast {% if message.tags %}toast-{{ message.tags }}{% endif %}">
         
-        {% for projeto in projetos %}
-            <div class="card">
-                <h2>{{ projeto.titulo }}</h2>
-                <div class="info">
-                    <strong>Curso:</strong> {{ projeto.curso }} | 
-                    <strong>Criado por:</strong> {{ projeto.criador_nome }}
-                </div>
-                <p class="desc">{{ projeto.descricao }}</p>
-            </div>
-        {% empty %}
-            <p style="text-align: center; color: #999;">Nenhum projeto cadastrado ainda.</p>
-        {% endfor %}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="toast-icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        
+        <span>{{ message }}</span>
+        
+        <button class="toast-close" onclick="this.parentElement.remove()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+
+  <form method="get" class="search-filter">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input
+        class="search-input"
+        type="text"
+        name="q"
+        value="{{ termo }}"
+        placeholder="Buscar projetos..."
+        oninput="pesquisarComDelay(this)"      
+      />
     </div>
-    {% endblock %}
 
-    <a href="{% url 'profile:register' %}">Registrar conta</a>
-    <a href="{% url 'profile:login' %}">Logar</a>
+      <div class="filter-row">
+        <span class="filter-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+          Filtrar por curso:
+        </span>
+        <div class="chips">
+          <button
+            type="submit"
+            name="curso"
+            value=""
+            class="chip {% if not curso_selecionado %}active{% endif %}"
+          >
+            Todos os Cursos
+          </button>
+          {% for c in cursos %}
+            <button
+              type="submit"
+              name="curso"
+              value="{{ c }}"
+              class="chip {% if curso_selecionado == c %}active{% endif %}"
+            >
+              {{ c }}
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+    </form>
+    <a href="{% url 'novo_projeto' %}" class="create-btn">
+      <span class="material-symbols-outlined">
+        add
+      </span>
+  
+      Novo Projeto
+    </a>
+    
+  <p class="results-label">
+    Mostrando <strong>{{ projetos|length }}</strong> projeto{{ projetos|length|pluralize }}
+  </p>
 
-</body>
-</html>
+
+  <div class="grid">
+    {% for p in projetos %}
+      <div class="card">
+
+        <div class="card-top">
+        <div class="badges-wrap" style="display: flex; flex-wrap: wrap; gap: 4px;">
+          {% for curso_vinculado in p.curso.all %}
+            <span class ="badge">{{ curso_vinculado.curso }}</span>
+          {% empty %}
+            <span class="badge" style="background: #999;">Sem curso</span>
+          {% endfor %}
+        </div>
+          <span class="card-date">{{ p.criado_em|date:"d/m/Y" }}</span>
+        </div>
+
+        <h3 class="card-title">{{ p.titulo }}</h3>
+        <p class="card-desc">{{ p.descricao }}</p>
+
+        <div class="card-footer">
+          <div class="owner">
+              <span class="material-symbols-outlined">account_circle  </span>
+            <div class="owner-info">
+              <span class="owner-name">{{ p.criador.username }}</span>
+              <span class="participants">{{ p.participantes_qtd }} participantes</span>
+            </div>
+          </div>
+
+          <a class="btn-chat" href="{% url 'chat:chat' %}">
+            <span class="material-symbols-outlined">
+                forum
+            </span>
+          </a>
+        </div>
+      </div>
+    {% empty %}
+      <div class="empty">
+        <h3>Nenhum projeto encontrado</h3>
+        <p>Tente ajustar os filtros ou buscar por outros termos</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  {%  endblock  %}

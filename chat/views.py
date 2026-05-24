@@ -1,17 +1,20 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required 
 from .models import Mensagem
 
+@login_required
 def chat(request):
     if request.method == 'POST':
-        nome = request.POST.get('nome')
         texto = request.POST.get('texto')
 
-        Mensagem.objects.create(
-            nome=nome,
-            texto=texto
+        if texto: #não envia msg vazia
+
+            Mensagem.objects.create(
+                autor  = request.user,
+                texto=texto
         )
 
-        return redirect('chat')
+        return redirect('chat:chat')
 
     mensagens = Mensagem.objects.all().order_by('-data')
 

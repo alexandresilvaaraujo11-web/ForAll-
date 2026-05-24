@@ -1,18 +1,31 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registre</title>
-</head>
-<body>
-    
-    <form method="post">
+{% extends 'base.html' %}
+{% block content %}
+<div class="auth-container">
+
+    <div class="auth-card auth-card-register">
+
+        <h2>Criar Conta</h2>
+
+        <form method="post">
+
             {% csrf_token %}
-            <p>pfv funcione amigo</p>
-            {{ form.as_p }}    
-            <button type="submit">Criar Conta</button>
-    </form>
-    
-</body>
-</html>
+
+            {{ form.as_p }}
+
+            <button type="submit" class="auth-btn">
+                Criar Conta
+            </button>
+
+        </form>
+
+        <p class="auth-switch">
+            Já possui uma conta?
+            <a href="{% url 'profile:login' %}">
+                Entrar
+            </a>
+        </p>
+
+    </div>
+
+</div>
+{% endblock %}

@@ -1,9 +1,10 @@
 from django.db import models
+from django.conf import settings
 
 class Mensagem(models.Model):
-    nome = models.CharField(max_length=100)
+    autor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     texto = models.TextField()
     data = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.nome
+        return self.autor.username
