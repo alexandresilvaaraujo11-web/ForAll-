@@ -502,9 +502,29 @@
   color: var(--gray-500);
   font-size: .9rem;
 }
+/* BOTÃO DE novo projeto */
+.create-btn {
+  width: fit-content;
 
+  display: flex;
+  align-items: center;
+  gap: 6px;
 
+  margin: 16px 0 24px;
+  padding: 12px 18px;
 
+  background: #2563eb;
+  color: white;
+
+  border-radius: 12px;
+
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.create-btn:hover {
+  opacity: .92;
+}
 
 /*      LOGIN                                  */
 .auth-container {
@@ -601,3 +621,4 @@
   font-weight: 600;
   color: var(--primary);
 }
+

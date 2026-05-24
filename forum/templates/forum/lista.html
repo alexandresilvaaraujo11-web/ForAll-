@@ -16,41 +16,47 @@
       />
     </div>
 
-    <div class="filter-row">
-      <span class="filter-label">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
-        </svg>
-        Filtrar por curso:
-      </span>
-
-      <div class="chips">
-        <button
-          type="submit"
-          name="curso"
-          value=""
-          class="chip {% if not curso_selecionado %}active{% endif %}"
-        >
-          Todos os Cursos
-        </button>
-
-        {% for c in cursos %}
+      <div class="filter-row">
+        <span class="filter-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+          Filtrar por curso:
+        </span>
+        <div class="chips">
           <button
             type="submit"
             name="curso"
-            value="{{ c }}"
-            class="chip {% if curso_selecionado == c %}active{% endif %}"
+            value=""
+            class="chip {% if not curso_selecionado %}active{% endif %}"
           >
-            {{ c }}
+            Todos os Cursos
           </button>
-        {% endfor %}
+          {% for c in cursos %}
+            <button
+              type="submit"
+              name="curso"
+              value="{{ c }}"
+              class="chip {% if curso_selecionado == c %}active{% endif %}"
+            >
+              {{ c }}
+            </button>
+          {% endfor %}
+        </div>
       </div>
-    </div>
-  </form>
-
+    </form>
+    <a href="{% url 'novo_projeto' %}" class="create-btn">
+      <span class="material-symbols-outlined">
+        add
+      </span>
+  
+      Novo Projeto
+    </a>
+    
   <p class="results-label">
     Mostrando <strong>{{ projetos|length }}</strong> projeto{{ projetos|length|pluralize }}
   </p>
+
 
   <div class="grid">
     {% for p in projetos %}
