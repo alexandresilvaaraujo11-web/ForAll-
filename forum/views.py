@@ -49,15 +49,19 @@ def novo_projeto(request):
             projeto=form.save(commit=False)
             projeto.criador = request.user
             projeto.save()
-            form.save_m2m() #salva as alterações do curso selecionavel
-        messages.success(request, 'Projeto criado com sucesso!')
-        return redirect('lista_projetos')
+            cursos_selecionados = form.cleaned_data.get('curso')
+            if cursos_selecionados:
+                projeto.curso.set(cursos_selecionados) #salva as alterações do curso selecionavel
+            messages.success(request, 'Projeto criado com sucesso!')
+            return redirect('lista_projetos')
     else:
-        template_name = 'form_forum.html'
-        context = {
-            'form': ForumForm(),
+        form =ForumForm()
+
+    template_name = 'form_forum.html'
+    context = {
+        'form': form,
         }
-        return render(request, template_name, context)
+    return render(request, template_name, context)
 
 
 def delete_projeto(request, pk):
