@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar no Sistema</title>
+    
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        input { margin-bottom: 10px; padding: 5px; width: 100%; max-width: 300px;}
+        .helptext, ul { font-size: 12px; color: #666; margin-top: 2px; }
+        .errorlist { color: red; list-style: none; padding: 0; } /* Deixa os erros de senha em vermelho */
+    </style>
+</head>
+<body>
+
+    <h2>Fazer Login</h2>
+
+    <!-- O method="post" é o que aciona o "if request.method == 'POST'" lá na sua view -->
+    <form method="post">
+        
+        <!-- Nunca esqueça o token de segurança, senão o Django bloqueia! -->
+        {% csrf_token %}
+        
+        <!-- O formulário de login padrão do Django usa o .as_p também! -->
+        {{ form.as_p }}
+        
+        <button type="submit">Entrar</button>
+    </form>
+
+    <br>
+    <!-- Um link camarada para quem chegou aqui e ainda não tem conta -->
+    <p>Ainda não tem uma conta? <a href="{% url 'profile:register' %}">Cadastre-se aqui</a></p>
+
+</body>
+</html>
