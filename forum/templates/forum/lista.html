@@ -1,16 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
 
-
 {% if messages %}
   <div class="toast-container">
     {% for message in messages %}
       <div class="toast {% if message.tags %}toast-{{ message.tags }}{% endif %}">
-        
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="toast-icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-        
         <span>{{ message }}</span>
-        
         <button class="toast-close" onclick="this.parentElement.remove()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
@@ -18,7 +14,6 @@
     {% endfor %}
   </div>
 {% endif %}
-
 
   <form method="get" class="search-filter">
     <div class="search-wrap">
@@ -36,60 +31,56 @@
       />
     </div>
 
-      <div class="filter-row">
-        <span class="filter-label">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
-          </svg>
-          Filtrar por curso:
-        </span>
-        <div class="chips">
+    <div class="filter-row">
+      <span class="filter-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+        </svg>
+        Filtrar por curso:
+      </span>
+      <div class="chips">
+        <button
+          type="submit"
+          name="curso"
+          value=""
+          class="chip {% if not curso_selecionado %}active{% endif %}"
+        >
+          Todos os Cursos
+        </button>
+        {% for c in cursos %}
           <button
             type="submit"
             name="curso"
-            value=""
-            class="chip {% if not curso_selecionado %}active{% endif %}"
+            value="{{ c }}"
+            class="chip {% if curso_selecionado == c %}active{% endif %}"
           >
-            Todos os Cursos
+            {{ c }}
           </button>
-          {% for c in cursos %}
-            <button
-              type="submit"
-              name="curso"
-              value="{{ c }}"
-              class="chip {% if curso_selecionado == c %}active{% endif %}"
-            >
-              {{ c }}
-            </button>
-          {% endfor %}
-        </div>
+        {% endfor %}
       </div>
-    </form>
-    <a href="{% url 'novo_projeto' %}" class="create-btn">
-      <span class="material-symbols-outlined">
-        add
-      </span>
-  
-      Novo Projeto
-    </a>
+    </div>
+  </form>
+
+  <a href="{% url 'novo_projeto' %}" class="create-btn">
+    <span class="material-symbols-outlined">add</span>
+    Novo Projeto
+  </a>
     
   <p class="results-label">
     Mostrando <strong>{{ projetos|length }}</strong> projeto{{ projetos|length|pluralize }}
   </p>
 
-
   <div class="grid">
     {% for p in projetos %}
       <div class="card">
-
         <div class="card-top">
-        <div class="badges-wrap" style="display: flex; flex-wrap: wrap; gap: 4px;">
-          {% for curso_vinculado in p.curso.all %}
-            <span class ="badge">{{ curso_vinculado.curso }}</span>
-          {% empty %}
-            <span class="badge" style="background: #999;">Sem curso</span>
-          {% endfor %}
-        </div>
+          <div class="badges-wrap" style="display: flex; flex-wrap: wrap; gap: 4px;">
+            {% for curso_vinculado in p.curso.all %}
+              <span class="badge">{{ curso_vinculado.curso }}</span>
+            {% empty %}
+              <span class="badge" style="background: #999;">Sem curso</span>
+            {% endfor %}
+          </div>
           <span class="card-date">{{ p.criado_em|date:"d/m/Y" }}</span>
         </div>
 
@@ -98,17 +89,43 @@
 
         <div class="card-footer">
           <div class="owner">
-              <span class="material-symbols-outlined">account_circle  </span>
+            <span class="material-symbols-outlined">account_circle</span>
             <div class="owner-info">
               <span class="owner-name">{{ p.criador.username }}</span>
               <span class="participants">{{ p.participantes_qtd }} participantes</span>
             </div>
           </div>
 
-          <a class="btn-chat" href="#">
-            <span class="material-symbols-outlined">
-                forum
-            </span>
+          {% if p.criador == request.user %}
+            <button type="button" 
+                    onclick="abrirModalDeletar('{{ p.pk }}')"
+                    style="background: none; border: none; color: #dc3545; padding: 0; cursor: pointer; display: flex; align-items: center; margin-right: 15px;" 
+                    title="Deletar Projeto">
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+
+            <div id="modal-{{ p.pk }}" class="modal-back" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+              <div style="background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 450px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-family: sans-serif;">
+                <h3 style="color: #333; margin-top: 0; font-size: 1.3rem;">ForAll</h3>
+                <p style="color: #666; margin: 15px 0; font-size: 1rem; line-height: 1.4;">Você tem certeza de excluir seu projeto? essa ação não será revertida!</p>
+                
+                <div style="display: flex; justify-content: center; gap: 12px; margin-top: 20px;">
+                  <button type="button" onclick="fecharModalDeletar('{{ p.pk }}')" style="background: #e2e8f0; border: none; padding: 10px 20px; border-radius: 6px; color: #4a5568; cursor: pointer; font-weight: 500;">
+                    Cancelar
+                  </button>
+                  <form method="post" action="{% url 'deletar_projeto' p.pk %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="background: #dc3545; border: none; padding: 10px 20px; border-radius: 6px; color: white; cursor: pointer; font-weight: 500;">
+                      Excluir
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          <a class="btn-chat" href="{% url 'chat_projeto' p.pk %}">
+            <span class="material-symbols-outlined">forum</span>
           </a>
         </div>
       </div>
@@ -120,4 +137,20 @@
     {% endfor %}
   </div>
 
-  {%  endblock  %}
+<script>
+  function abrirModalDeletar(id) {
+    const modal = document.getElementById('modal-' + id);
+    if (modal) {
+      modal.style.display = 'flex';
+    }
+  }
+
+  function fecharModalDeletar(id) {
+    const modal = document.getElementById('modal-' + id);
+    if (modal) {
+      modal.style.display = 'none';
+    }
+  }
+</script>
+
+{% endblock %}
