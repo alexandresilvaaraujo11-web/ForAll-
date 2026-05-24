@@ -28,6 +28,7 @@
                     <strong>Criado por:</strong> {{ projeto.criador_nome }}
                 </div>
                 <p class="desc">{{ projeto.descricao }}</p>
+                <a href="{% url 'deletar_projeto' projeto.pk %}">Deletar</a>
             </div>
         {% empty %}
             <p style="text-align: center; color: #999;">Nenhum projeto cadastrado ainda.</p>

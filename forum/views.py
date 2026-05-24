@@ -22,4 +22,10 @@ def novo_projeto(request):
         }
         return render(request, template_name, context)
 
+from django.shortcuts import get_object_or_404, redirect
+from .models import Projeto
 
+def delete_projeto(request, pk):
+    projeto = get_object_or_404(Projeto, pk=pk)
+    projeto.delete()
+    return redirect('lista_projetos') 
