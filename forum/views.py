@@ -8,7 +8,6 @@ from profiles.models import Cursos
 
 
 def lista_projetos(request):
-
     projetos = Projeto.objects.all().order_by('-criado_em')
 
     termo = request.GET.get('q', '').strip()
@@ -42,7 +41,6 @@ def lista_projetos(request):
 
 @login_required
 def novo_projeto(request):
-    
     if request.method == 'POST':
         form = ForumForm(request.POST)
         if form.is_valid():
@@ -69,3 +67,27 @@ def deletar_projeto(request, projeto_id):
         projeto.delete()
         messages.success(request, "Projeto deletado com sucesso!") 
     return redirect('lista_projetos')
+
+@login_required
+def chat_projeto(request, projeto_id):
+    projeto = get_object_or_404(Projeto, id=projeto_id)
+    
+    # Tentamos buscar as mensagens. Se der erro porque o modelo não existe, o sistema não quebra
+    try:
+        mensagens = projeto.mensagens.all().order_by('enviado_em')
+    except AttributeError:
+        mensagens = []
+    
+    if request.method == 'POST':
+        texto = request.POST.get('texto', '').strip()
+        if texto and mensagens != []:
+            try:
+                projeto.mensagens.create(usuario=request.user, texto=texto)
+                return redirect('chat_projeto', projeto_id=projeto.id)
+            except AttributeError:
+                pass
+            
+    return render(request, 'forum/chat.html', {
+        'projeto': projeto,
+        'mensagens': mensagens
+    })
