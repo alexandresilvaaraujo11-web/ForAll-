@@ -95,3 +95,41 @@ def chat_projeto(request, projeto_id):
         'projeto': projeto,
         'mensagens': mensagens
     })
+
+@login_required
+def update_projeto(request, pk):
+    
+    projeto = get_object_or_404(Projeto, pk=pk)
+    
+    #Garante que apenas o criador possa editar o próprio projeto
+    if projeto.criador != request.user:
+        messages.error(request, 'Você não tem permissão para editar este projeto.')
+        return redirect('lista_projetos')
+
+    if request.method == 'POST':
+        # 2. Passamos o request.POST e a 'instance=projeto' para o Django saber que é uma ATUALIZAÇÃO
+        form = ForumForm(request.POST, instance=projeto)
+        
+        if form.is_valid():
+            # Salva os dados de texto (titulo, descricao, etc.)
+            projeto = form.save(commit=False)
+            projeto.save()
+            
+            # 3. Atualiza as relações ManyToMany (Cursos)
+            cursos_selecionados = form.cleaned_data.get('curso')
+            if cursos_selecionados:
+                projeto.curso.set(cursos_selecionados)
+            else:
+                projeto.curso.clear() # Se ele desmarcar tudo, limpa as relações
+                
+            messages.success(request, 'Projeto atualizado com sucesso!')
+            return redirect('lista_projetos')
+    else:
+        form = ForumForm(instance=projeto)
+    
+    template_name = 'forum/form_forum.html'
+    context = {
+        'form': form,
+        'projeto': projeto, # Passamos o projeto para o HTML saber se é uma edição ou criação
+    }
+    return render(request, template_name, context)
