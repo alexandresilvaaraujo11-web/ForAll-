@@ -177,6 +177,7 @@
     }
     .btn-ghost svg { width: 16px; height: 16px; }
     .btn-ghost:hover { background: var(--gray-100); border-color: var(--gray-300); color: var(--gray-900); }
+    
 
     /* Hamburger (mobile) */
     .hamburger {
@@ -622,6 +623,7 @@
   color: var(--primary);
 }
 
+<<<<<<< HEAD
 /* ── Select (Aplicado diretamente na tag) ── */
 select {
   width: 100%;
@@ -669,4 +671,268 @@ select option {
   color: var(--gray-900);
   font-size: 0.95rem;
   padding: 10px;
+=======
+/* ── Textarea ── */
+textarea {
+  width: 100%;
+  min-height: 120px; /* Altura inicial agradável */
+  padding: 0.85rem 1rem;
+  
+  /* Puxando as cores que já existem no seu :root */
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius); /* Usa o mesmo arredondamento dos cards/inputs */
+  
+  /* Tipografia */
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  color: var(--gray-900);
+  line-height: 1.5;
+  
+  /* Comportamento */
+  outline: none;
+  resize: vertical; /* Permite que o usuário aumente a caixa apenas para baixo, não quebrando o layout do site */
+  transition: border-color .18s, box-shadow .18s;
+}
+
+/* Efeito quando o usuário clica para digitar (Focus) */
+textarea:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12); /* Aquele anel azul suave em volta */
+}
+
+/* Cor do texto de exemplo (Placeholder) */
+textarea::placeholder {
+  color: var(--gray-400);
+}
+
+/* Efeito caso o campo esteja desativado (Disabled) */
+textarea:disabled {
+  background: var(--gray-100);
+  color: var(--gray-500);
+  cursor: not-allowed;
+}
+
+/*  HEADER nav pra desktop com botão de projetos  */
+/* Esconde no mobile */
+.bottom-nav {
+  display: none;
+}
+
+/* Mostra e estiliza no desktop */
+@media (min-width: 768px) {
+  .bottom-nav {
+    display: block;
+    height: 35px;
+  }
+  
+  .bottom-nav-container {
+    max-width: 1200px;
+    margin: 5px auto;
+    padding: 0 0.75rem;
+    display: flex;
+    gap: 0.5rem;
+    height: 25px;
+    background: transparent; /* Correção: 'none' é inválido, o certo é 'transparent' */
+  }
+
+  .bottom-nav .nav-link {
+    position: relative; /* Obrigatório para a linha animada funcionar */
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.40rem;
+    text-decoration: none;
+    color: #1d4ed8;
+    font-weight: 500;
+    font-size: 0.80rem;
+    background: transparent; /* Correção do erro de sintaxe */
+    transition: color 0.2s ease-in-out;
+  }
+
+  /* Criação da linha animada colada no texto */
+  .bottom-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px; /* Controla a distância da linha pro texto */
+    width: 100%;
+    height: 2px;
+    background: currentColor; 
+    transform: scaleX(0);
+    transition: transform 0.2s ease-in-out;
+  }
+
+  /* Efeito HOVER: Apenas texto azul e linha aparecendo (zero fundo) */
+  .bottom-nav .nav-link:hover {
+    background: transparent; 
+    color: #0056b3;
+  }
+  
+  .bottom-nav .nav-link:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* Efeito ATIVO (página atual) */
+  .bottom-nav .nav-link.active,
+  .bottom-nav .nav-link.page-active {
+    background: transparent; 
+    color: #0056b3; 
+    font-weight: 600;
+  }
+
+  .bottom-nav .nav-link.active::after,
+  .bottom-nav .nav-link.page-active::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Botão de Logout (Sair) */
+/* Botão de Logout - Vermelho forte padrão com hover Carmesim */
+.btn-logout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: .45rem .95rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #ffffff; /* Texto branco obrigatório para o contraste */
+  background: #dc2626; /* Vermelho forte e vivo inicial */
+  border: 1.5px solid #dc2626;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-decoration: none;
+}
+
+.btn-logout svg { 
+  width: 16px; 
+  height: 16px; 
+  stroke: currentColor; /* Copia o branco do texto */
+  transition: transform 0.2s;
+}
+
+/* Efeito Hover (mouse em cima) e Active (durante o clique) */
+.btn-logout:hover,
+.btn-logout:active { 
+  background: #991b1b; /* Tom Carmesim / Vermelho bem mais escuro */
+  border-color: #991b1b;
+}
+
+.btn-logout:hover svg {
+  transform: translateX(2px); /* Mantém o detalhezinho do ícone indo pro lado */
+}
+
+/* Efeito extra de afundar a tecla ao clicar */
+.btn-logout:active {
+  transform: scale(0.96);
+}
+
+/* Centraliza os links e botões dentro do menu mobile */
+.mobile-menu .nav-link,
+.mobile-menu .btn-logout,
+.mobile-menu .btn-ghost,
+.mobile-menu .btn-primary {
+  width: 100%; /* Garante que o botão ocupe toda a largura da tela */
+  justify-content: center; /* Centraliza o ícone e o texto no meio do botão */
+}
+
+/* ── Popups / Toasts ── */
+.toast-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999; /* Garante que fique por cima de tudo */
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--white);
+  color: var(--gray-900);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  border-left: 5px solid var(--blue); /* Uma barrinha lateral azul para destaque */
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  min-width: 280px;
+  
+  /* Animação de entrada (deslizando de baixo) */
+  animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  cursor: pointer;
+}
+
+/* Modificador de cor se for mensagem de sucesso (success) */
+.toast-success {
+  border-left-color: #10b981; /* Verde esmeralda */
+}
+.toast-success .toast-icon {
+  color: #10b981;
+}
+
+.toast-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  color: var(--gray-400);
+  cursor: pointer;
+  margin-left: auto; /* Empurra o botão pro canto direito */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+.toast-close:hover {
+  color: var(--gray-700);
+}
+.toast-close svg {
+  width: 18px;
+  height: 18px;
+}
+
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Ajuste para telas pequenas (celular) */
+@media (max-width: 480px) {
+  .toast-container {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem; /* Ocupa a largura toda com um respiro no celular */
+  }
+}
+
+/* 1. Criando a animação de entrada */
+@keyframes slideInRightBounce {
+  0% {
+    opacity: 0;
+    transform: translateX(100px) scale(0.9); /* Começa invisível, menor e empurrado pra direita */
+  }
+  70% {
+    transform: translateX(-10px) scale(1.02); /* Passa um pouquinho do ponto pra dar o efeito elástico */
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1); /* Para no lugar certinho */
+  }
+}
+
+/* 2. Aplicando a animação no seu popup */
+.toast {
+  /* Se já tiver algum "animation:" no seu .toast, substitua por este: */
+  animation: slideInRightBounce 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+>>>>>>> f4bf8155aba54d36cd42bd081ddf5ffb7bf4d795
 }

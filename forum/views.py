@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .models import Projeto
 from .forms import ForumForm
 
@@ -51,6 +52,7 @@ def novo_projeto(request):
             projeto=form.save(commit=False)
             projeto.criador = request.user
             projeto.save()
+        messages.success(request, 'Projeto criado com sucesso!')
         return redirect('lista_projetos')
     else:
         template_name = 'form_forum.html'
