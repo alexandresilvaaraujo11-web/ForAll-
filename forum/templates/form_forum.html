@@ -10,6 +10,9 @@
         <form method="POST">
 
             {% csrf_token %}
+            {{ form.curso.erros }}
+
+            
 
            <!-- {{ form.as_p }} -->
              {% for field in form %}
