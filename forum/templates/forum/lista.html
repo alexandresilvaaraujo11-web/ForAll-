@@ -81,8 +81,15 @@
   <div class="grid">
     {% for p in projetos %}
       <div class="card">
+
         <div class="card-top">
-          <span class="badge">{{ p.curso }}</span>
+        <div class="badges-wrap" style="display: flex; flex-wrap: wrap; gap: 4px;">
+          {% for curso_vinculado in p.curso.all %}
+            <span class ="badge">{{ curso_vinculado.curso }}</span>
+          {% empty %}
+            <span class="badge" style="background: #999;">Sem curso</span>
+          {% endfor %}
+        </div>
           <span class="card-date">{{ p.criado_em|date:"d/m/Y" }}</span>
         </div>
 
@@ -93,7 +100,7 @@
           <div class="owner">
               <span class="material-symbols-outlined">account_circle  </span>
             <div class="owner-info">
-              <span class="owner-name">{{ p.criador_nome }}</span>
+              <span class="owner-name">{{ p.criador.username }}</span>
               <span class="participants">{{ p.participantes_qtd }} participantes</span>
             </div>
           </div>

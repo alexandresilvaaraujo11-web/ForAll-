@@ -1,16 +1,15 @@
-from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Projeto
 from .forms import ForumForm
-
+from profiles.models import Cursos
 
 
 def lista_projetos(request):
 
-    projetos = Projeto.objects.all()
+    projetos = Projeto.objects.all().order_by('-criado_em')
 
     termo = request.GET.get('q', '').strip()
     curso_selecionado = request.GET.get('curso', '').strip()
@@ -18,20 +17,18 @@ def lista_projetos(request):
     # pesquisa
     if termo:
         projetos = projetos.filter(
-            titulo__icontains=termo
-        ) | projetos.filter(
-            descricao__icontains=termo
-        ) | projetos.filter(
-            criador_nome__icontains=termo
-        )
+            Q(titulo__icontains=termo) |
+            Q(descricao__icontains=termo) |
+            Q(criador__username__icontains=termo)
+        ).distinct()
 
     # filtro
     if curso_selecionado:
         projetos = projetos.filter(
-            curso=curso_selecionado
-        )
+            curso__curso=curso_selecionado
+        ).distinct()
 
-    cursos = Projeto.objects.values_list(
+    cursos = Cursos.objects.values_list(
         'curso',
         flat=True
     ).distinct()
@@ -52,6 +49,7 @@ def novo_projeto(request):
             projeto=form.save(commit=False)
             projeto.criador = request.user
             projeto.save()
+            form.save_m2m() #salva as alterações do curso selecionavel
         messages.success(request, 'Projeto criado com sucesso!')
         return redirect('lista_projetos')
     else:
