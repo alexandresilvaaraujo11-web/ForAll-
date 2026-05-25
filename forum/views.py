@@ -81,11 +81,11 @@ def deletar_projeto(request, projeto_id):
         messages.success(request, "Projeto deletado com sucesso!") 
     return redirect('lista_projetos')
 @login_required
+@login_required
 def chat_projeto(request, projeto_id):
     projeto = get_object_or_404(Projeto, id=projeto_id)
-    # Garante que a sala exista
+    # Busca ou cria a sala usando o ID do projeto
     sala, criada = Sala.objects.get_or_create(id=projeto.id, defaults={'nome': projeto.titulo})
-    
     mensagens = sala.mensagens.all().order_by('data')
     
     if request.method == 'POST':
@@ -99,7 +99,6 @@ def chat_projeto(request, projeto_id):
         'sala': sala,            
         'mensagens': mensagens
     })
-
 @login_required
 def update_projeto(request, projeto_id):
     
