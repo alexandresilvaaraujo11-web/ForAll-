@@ -86,9 +86,9 @@
 
         <h3 class="card-title">{{ p.titulo }}</h3>
         <p class="card-desc" style="word-wrap: break-word; word-break: break-all; white-space: normal;">
-          {{ p.descricao|truncatechars:119 }}
-          {% if p.descricao|length > 119 %}
-            <a href="{% url 'chat_projeto' p.pk %}" style="color: #002fff; text-decoration: none; font-weight: bold; margin-left: 5px;">Ler mais...</a>
+          {{ p.descricao|truncatechars:75 }}
+          {% if p.descricao|length > 75 %}
+            <a href="{% url 'detalhe_projeto' p.pk %}" style="color: #002fff; text-decoration: none; font-weight: bold; margin-left: 5px;">Ler mais...</a>
           {% endif %}
         </p>
 
