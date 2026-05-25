@@ -1170,3 +1170,14 @@ input[type="checkbox"]:focus {
   }
 
 }
+
+.status-bolinha {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #28a745;
+    border-radius: 50%;
+    margin-left: 5px;
+    /* Isso faz ela ficar levemente "atrás" ou "colada" no nome */
+    vertical-align: middle;
+}

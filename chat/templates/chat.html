@@ -145,43 +145,160 @@
     .btn-send:hover {
         background-color: #1a519d;
     }
+
+    .chat-header {
+        background-color: #ffffff;
+        color: #0d2343;
+        padding: 18px 20px;
+        font-size: 1.3rem;
+        font-weight: bold;
+        border-bottom: 2px solid #e9ecef;
+        letter-spacing: 0.5px;
+        
+        /* Novas regras para o layout do cabeçalho */
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Mantém o título centralizado */
+        position: relative; /* Permite posicionar o botão livremente */
+    }
+
+    /* Estilo e animação do botão de voltar */
+    .btn-voltar {
+        position: absolute;
+        left: 20px; /* Prende o botão no canto esquerdo */
+        color: #0d2343;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .btn-voltar:hover {
+        color: #1a519d; /* Fica azul ao passar o mouse */
+        transform: translateX(-4px); /* Puxa a seta suavemente para a esquerda */
+    }
+    .system-message {
+  width: fit-content;
+
+  margin: 18px auto;
+
+  padding: 8px 14px;
+
+  border-radius: 999px;
+
+  background: #f3f4f6;
+  color: #6b7280;
+
+  font-weight: 500;
+
+  text-align: center;
+    opacity: .8;
+  font-size: .8rem;
+}
+.system-message {
+  animation: fadeIn .3s ease;
+}
+
+.message-course {
+        font-size: 0.6rem; /* Fonte bem pequena */
+        color: #6c757d;     /* Cinza suave para não brigar com a mensagem */
+        margin-top: -6px;   /* Puxa para cima, colando no nick */
+        margin-bottom: 6px; /* Dá um espacinho antes do texto da mensagem */
+        font-weight: normal;
+    }
+
 </style>
 
 <div class="fundo-chat">
     <div class="chat-container">
         
-        <div class="chat-header">
-            Chat Geral
+      <div class="chat-header">
+            <a href="{% url 'lista_projetos' %}" class="btn-voltar" title="Voltar aos Projetos">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+            </a>
+            
+            <span>{{ sala }}</span>
         </div>
 
-        <div class="messages-box">
-            {% for mensagem in mensagens %}
+      <div class="messages-box">
+
+    {% for mensagem in mensagens %}
+
+        {% if mensagem.sistema %}
+
+            <div class="system-message">
+                {{ mensagem.texto }}
+            </div>
+
+        {% elif mensagem.autor == request.user %}
+
+            <div class="message-card minha-mensagem">
+                <div class="message-user" style="color: #1a519d;">Você</div>
                 
-                {% if mensagem.autor == request.user %}
-                    <div class="message-card minha-mensagem">
-                        <div class="message-user" style="color: #1a519d;">Você</div>
-                        <div class="message-text">{{ mensagem.texto }}</div>
-                    </div>
-                    
-                {% else %}
-                    <div class="message-card outra-mensagem">
-                        <div class="message-user">{{ mensagem.autor.username }}</div>
-                        <div class="message-text">{{ mensagem.texto }}</div>
-                    </div>
-                {% endif %}
+              <!--  
+                ideia nao ficou boa
+                <div class="message-course">{{ mensagem.autor.curso.curso|default:"Nenhum" }}</div> 
+                -->
                 
-            {% empty %}
-                <p style="text-align: center; color: #6c757d; margin-top: 20px;">Nenhuma mensagem ainda.</p>
-            {% endfor %}
-        </div>
-        <form method="POST" action="{% url 'chat:chat' %}" class="chat-form">
+                <div class="message-text">{{ mensagem.texto }}</div>
+            </div>
+
+        {% else %}
+
+            <div class="message-card outra-mensagem">
+                <div class="message-user">{{ mensagem.autor.username }} </div>
+                
+                <div class="message-course">{{ mensagem.autor.curso.curso|default:"Nenhum" }}</div>
+                
+                <div class="message-text">{{ mensagem.texto }}</div>
+            </div>
+
+        {% endif %}
+
+    {% empty %}
+
+        <p style="text-align: center; color: #6c757d; margin-top: 20px;">
+            Nenhuma mensagem ainda.
+        </p>
+
+    {% endfor %}
+
+</div>
+        <form method="POST" action="{% url 'chat:chat_sala' sala.id %}" class="chat-form">
             {% csrf_token %}
             <div class="form-row">
-                <textarea name="texto" placeholder="Digite sua mensagem..." required></textarea>
+                <textarea name="texto" placeholder="Compartilhe uma ideia ou dúvida sobre o {{ sala.nome }}..." required></textarea>
                 <button type="submit" class="btn-send">Enviar</button>
             </div>
         </form>
 
     </div>
 </div>
+
+<script>
+    function atualizarMensagens() {
+        // 1. O 'fetch' vai secretamente na mesma URL da sala e baixa a página atualizada
+        fetch(window.location.href)
+            .then(resposta => resposta.text())
+            .then(htmlMofidificado => {
+                
+                // 2. Transforma o texto que chegou em um código HTML legível pro navegador
+                let parser = new DOMParser();
+                let documentoNovo = parser.parseFromString(htmlMofidificado, 'text/html');
+                
+                // 3. Recorta SÓ a parte das mensagens da página nova
+                let novasMensagens = documentoNovo.querySelector('.messages-box').innerHTML;
+                
+                // 4. Cola as mensagens novas na sua tela atual (substituindo as velhas)
+                document.querySelector('.messages-box').innerHTML = novasMensagens;
+            })
+            .catch(erro => console.log("Erro ao atualizar chat:", erro));
+    }
+
+    // O setInterval é um cronômetro. Ele manda rodar a função acima a cada 2000 milissegundos (2 segundos).
+    setInterval(atualizarMensagens, 2000);
+</script>
 {% endblock %}

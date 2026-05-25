@@ -5,11 +5,20 @@ from django.contrib import messages
 from .models import Projeto
 from .forms import ForumForm
 from profiles.models import Cursos
+from chat.models import Sala
 
 
 def lista_projetos(request):
 
     projetos = Projeto.objects.all().order_by('-criado_em')
+    for p in projetos:
+        try:
+            sala = Sala.objects.get(id=p.id)
+            # Sobrescrevemos o valor do banco com a quantidade real do chat
+            p.participantes_qtd = sala.participantes.count()
+        except Sala.DoesNotExist:
+            # Se ninguém abriu o chat ainda, o padrão é 1 (o próprio criador)
+            p.participantes_qtd = 1
 
     termo = request.GET.get('q', '').strip()
     curso_selecionado = request.GET.get('curso', '').strip()
