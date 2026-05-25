@@ -1,0 +1,304 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+ <style>
+    /* 1. Mudamos de "main" para uma div específica, evitando quebrar o header/footer */
+    body{
+        background-image: url("{% static 'imagens/fundo.png' %}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+
+    }
+    .fundo-chat {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* Calcula a altura da tela menos o tamanho aproximado do menu do topo */
+        min-height: calc(100vh - 80px); 
+        width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    /* 2. Trouxe a fonte direto para o container em vez de usar o asterisco (*) */
+    .chat-container {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        width: 100%;
+        max-width: 600px;
+        height: 75vh; /* Levemente menor para não criar rolagem dupla na tela */
+        background-color: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    /* --- O Resto do seu CSS continua idêntico! --- */
+    .chat-header {
+        background-color: #ffffff;
+        color: #0d2343;
+        padding: 18px 20px;
+        font-size: 1.3rem;
+        font-weight: bold;
+        text-align: center;
+        border-bottom: 2px solid #e9ecef;
+        letter-spacing: 0.5px;
+    }
+
+    .messages-box {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        background-color: #f8f9fa; 
+
+        /* O TRUQUE ESTÁ AQUI: Inverte a ordem física e joga o scroll para o final */
+        flex-direction: column-reverse;
+    }
+/* 1. A base do cartão (apenas o que serve para os dois lados) */
+    .message-card {
+        padding: 12px 16px;
+        box-shadow: 0 2px 6px rgba(13, 35, 67, 0.06);
+        max-width: 85%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* 2. Suas mensagens (Lado Direito) */
+    .minha-mensagem {
+        align-self: flex-end;
+        background-color: #e6f2ff; /* Um azul bem claro para diferenciar */
+        border-right: 4px solid #1a519d;
+        border-radius: 16px 0 16px 16px; /* Biquinho pra direita */
+    }
+
+    /* 3. Mensagens dos outros (Lado Esquerdo) */
+    .outra-mensagem {
+        align-self: flex-start;
+        background-color: #ffffff;
+        border-left: 4px solid #1a519d;
+        border-radius: 0 16px 16px 16px; /* Biquinho pra esquerda */
+    }
+    .message-user {
+        font-size: 0.9rem;
+        font-weight: bold;
+        color: #000000;
+        margin-bottom: 5px;
+    }
+
+    .message-text {
+        font-size: 0.95rem;
+        color: #212529;
+        line-height: 1.4;
+        word-break: break-word;
+    }
+
+    .chat-form {
+        padding: 20px;
+        background-color: #ffffff;
+        border-top: 1px solid #ced4da;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .chat-form textarea {
+        padding: 12px 16px;
+        border: 1.5px solid #ced4da;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        outline: none;
+        color: #0d2343;
+        background-color: #f8f9fa;
+        transition: all 0.2s ease;
+        resize: none;
+        height: 46px;
+        flex: 1;
+        box-sizing: border-box;
+    }
+
+    .chat-form textarea:focus {
+        border-color: #1a519d;
+        background-color: #ffffff;
+    }
+
+    .btn-send {
+        background-color: #0d2343;
+        color: #ffffff;
+        border: none;
+        padding: 0 24px;
+        height: 46px;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .btn-send:hover {
+        background-color: #1a519d;
+    }
+
+    .chat-header {
+        background-color: #ffffff;
+        color: #0d2343;
+        padding: 18px 20px;
+        font-size: 1.3rem;
+        font-weight: bold;
+        border-bottom: 2px solid #e9ecef;
+        letter-spacing: 0.5px;
+        
+        /* Novas regras para o layout do cabeçalho */
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Mantém o título centralizado */
+        position: relative; /* Permite posicionar o botão livremente */
+    }
+
+    /* Estilo e animação do botão de voltar */
+    .btn-voltar {
+        position: absolute;
+        left: 20px; /* Prende o botão no canto esquerdo */
+        color: #0d2343;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .btn-voltar:hover {
+        color: #1a519d; /* Fica azul ao passar o mouse */
+        transform: translateX(-4px); /* Puxa a seta suavemente para a esquerda */
+    }
+    .system-message {
+  width: fit-content;
+
+  margin: 18px auto;
+
+  padding: 8px 14px;
+
+  border-radius: 999px;
+
+  background: #f3f4f6;
+  color: #6b7280;
+
+  font-weight: 500;
+
+  text-align: center;
+    opacity: .8;
+  font-size: .8rem;
+}
+.system-message {
+  animation: fadeIn .3s ease;
+}
+
+.message-course {
+        font-size: 0.6rem; /* Fonte bem pequena */
+        color: #6c757d;     /* Cinza suave para não brigar com a mensagem */
+        margin-top: -6px;   /* Puxa para cima, colando no nick */
+        margin-bottom: 6px; /* Dá um espacinho antes do texto da mensagem */
+        font-weight: normal;
+    }
+
+</style>
+
+<div class="fundo-chat">
+    <div class="chat-container">
+        
+      <div class="chat-header">
+            <a href="{% url 'lista_projetos' %}" class="btn-voltar" title="Voltar aos Projetos">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+            </a>
+            
+            <span>{{ sala }}</span>
+        </div>
+
+      <div class="messages-box">
+
+    {% for mensagem in mensagens %}
+
+        {% if mensagem.sistema %}
+
+            <div class="system-message">
+                {{ mensagem.texto }}
+            </div>
+
+        {% elif mensagem.autor == request.user %}
+
+            <div class="message-card minha-mensagem">
+                <div class="message-user" style="color: #1a519d;">Você</div>
+                
+              <!--  
+                ideia nao ficou boa
+                <div class="message-course">{{ mensagem.autor.curso.curso|default:"Nenhum" }}</div> 
+                -->
+                
+                <div class="message-text">{{ mensagem.texto }}</div>
+            </div>
+
+        {% else %}
+
+            <div class="message-card outra-mensagem">
+                <div class="message-user">{{ mensagem.autor.username }} </div>
+                
+                <div class="message-course">{{ mensagem.autor.curso.curso|default:"Nenhum" }}</div>
+                
+                <div class="message-text">{{ mensagem.texto }}</div>
+            </div>
+
+        {% endif %}
+
+    {% empty %}
+
+        <p style="text-align: center; color: #6c757d; margin-top: 20px;">
+            Nenhuma mensagem ainda.
+        </p>
+
+    {% endfor %}
+
+</div>
+        <form method="POST" action="{% url 'chat:chat_sala' sala.id %}" class="chat-form">
+            {% csrf_token %}
+            <div class="form-row">
+                <textarea name="texto" placeholder="Compartilhe uma ideia ou dúvida sobre o {{ sala.nome }}..." required></textarea>
+                <button type="submit" class="btn-send">Enviar</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script>
+    function atualizarMensagens() {
+        // 1. O 'fetch' vai secretamente na mesma URL da sala e baixa a página atualizada
+        fetch(window.location.href)
+            .then(resposta => resposta.text())
+            .then(htmlMofidificado => {
+                
+                // 2. Transforma o texto que chegou em um código HTML legível pro navegador
+                let parser = new DOMParser();
+                let documentoNovo = parser.parseFromString(htmlMofidificado, 'text/html');
+                
+                // 3. Recorta SÓ a parte das mensagens da página nova
+                let novasMensagens = documentoNovo.querySelector('.messages-box').innerHTML;
+                
+                // 4. Cola as mensagens novas na sua tela atual (substituindo as velhas)
+                document.querySelector('.messages-box').innerHTML = novasMensagens;
+            })
+            .catch(erro => console.log("Erro ao atualizar chat:", erro));
+    }
+
+    // O setInterval é um cronômetro. Ele manda rodar a função acima a cada 2000 milissegundos (2 segundos).
+    setInterval(atualizarMensagens, 2000);
+</script>
+{% endblock %}

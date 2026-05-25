@@ -5,10 +5,19 @@ from django.contrib import messages
 from .models import Projeto
 from .forms import ForumForm
 from profiles.models import Cursos
+from chat.models import Sala
 
 
 def lista_projetos(request):
     projetos = Projeto.objects.all().order_by('-criado_em')
+    for p in projetos:
+        try:
+            sala = Sala.objects.get(id=p.id)
+            # Sobrescrevemos o valor do banco com a quantidade real do chat
+            p.participantes_qtd = sala.participantes.count()
+        except Sala.DoesNotExist:
+            # Se ninguém abriu o chat ainda, o padrão é 1 (o próprio criador)
+            p.participantes_qtd = 1
 
     termo = request.GET.get('q', '').strip()
     curso_selecionado = request.GET.get('curso', '').strip()
@@ -71,31 +80,25 @@ def deletar_projeto(request, projeto_id):
         projeto.delete()
         messages.success(request, "Projeto deletado com sucesso!") 
     return redirect('lista_projetos')
-
+@login_required
 @login_required
 def chat_projeto(request, projeto_id):
     projeto = get_object_or_404(Projeto, id=projeto_id)
-    
-    # Tentamos buscar as mensagens. Se der erro porque o modelo não existe, o sistema não quebra
-    try:
-        mensagens = projeto.mensagens.all().order_by('enviado_em')
-    except AttributeError:
-        mensagens = []
+    # Busca ou cria a sala usando o ID do projeto
+    sala, criada = Sala.objects.get_or_create(id=projeto.id, defaults={'nome': projeto.titulo})
+    mensagens = sala.mensagens.all().order_by('data')
     
     if request.method == 'POST':
         texto = request.POST.get('texto', '').strip()
-        if texto and mensagens != []:
-            try:
-                projeto.mensagens.create(usuario=request.user, texto=texto)
-                return redirect('chat_projeto', projeto_id=projeto.id)
-            except AttributeError:
-                pass
+        if texto:
+            sala.mensagens.create(autor=request.user, texto=texto)
+            return redirect('chat_projeto', projeto_id=projeto.id)
             
-    return render(request, 'forum/chat.html', {
+    return render(request, 'chat.html', {
         'projeto': projeto,
+        'sala': sala,            
         'mensagens': mensagens
     })
-
 @login_required
 def update_projeto(request, projeto_id):
     

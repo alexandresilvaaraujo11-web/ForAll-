@@ -1,5 +1,10 @@
 @charset "UTF-8";
 
+
+  *{
+    padding: 0;
+    margin: 0;
+  }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -493,6 +498,8 @@
 
     /* Footer  */
     .footer {
+      position: relative;
+    background-color: var(--bg);
   margin-top: 40px;
   padding: 20px;
 
@@ -1162,4 +1169,15 @@ input[type="checkbox"]:focus {
     padding: 1.5rem 1rem; /* Diminui um pouquinho o espaço interno nas laterais para caber mais texto */
   }
 
+}
+
+.status-bolinha {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #28a745;
+    border-radius: 50%;
+    margin-left: 5px;
+    /* Isso faz ela ficar levemente "atrás" ou "colada" no nome */
+    vertical-align: middle;
 }
