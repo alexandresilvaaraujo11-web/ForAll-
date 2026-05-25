@@ -97,9 +97,9 @@ def chat_projeto(request, projeto_id):
     })
 
 @login_required
-def update_projeto(request, pk):
+def update_projeto(request, projeto_id):
     
-    projeto = get_object_or_404(Projeto, pk=pk)
+    projeto = get_object_or_404(Projeto, id=projeto_id)
     
     #Garante que apenas o criador possa editar o próprio projeto
     if projeto.criador != request.user:
@@ -127,7 +127,7 @@ def update_projeto(request, pk):
     else:
         form = ForumForm(instance=projeto)
     
-    template_name = 'forum/form_forum.html'
+    template_name = 'form_forum.html'
     context = {
         'form': form,
         'projeto': projeto, # Passamos o projeto para o HTML saber se é uma edição ou criação
