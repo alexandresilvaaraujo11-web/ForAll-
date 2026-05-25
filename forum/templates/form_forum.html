@@ -5,7 +5,11 @@
 
     <div class="auth-card">
 
-        <h2>Novo Projeto</h2>
+        {% if form.instance.pk %}
+          <h2>Editando Projeto</h2>
+        {% else %}
+          <h2>Novo Projeto</h2>
+        {% endif %}
 
         <form method="POST">
 
