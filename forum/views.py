@@ -133,3 +133,7 @@ def update_projeto(request, projeto_id):
         'projeto': projeto, # Passamos o projeto para o HTML saber se é uma edição ou criação
     }
     return render(request, template_name, context)
+
+def detalhe_projeto (request,pk):
+    projeto = get_object_or_404(Projeto, pk=pk)
+    return render(request,'forum/detalhe_projeto.html', {'projeto': projeto})
