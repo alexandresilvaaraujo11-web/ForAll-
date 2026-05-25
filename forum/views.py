@@ -80,31 +80,18 @@ def deletar_projeto(request, projeto_id):
         projeto.delete()
         messages.success(request, "Projeto deletado com sucesso!") 
     return redirect('lista_projetos')
-
 @login_required
 def chat_projeto(request, projeto_id):
-    # 1. Busca o projeto
     projeto = get_object_or_404(Projeto, id=projeto_id)
+    # Garante que a sala exista
+    sala, criada = Sala.objects.get_or_create(id=projeto.id, defaults={'nome': projeto.titulo})
     
-    # 2. Busca ou cria a sala (usando o id do projeto)
-    sala, criada = Sala.objects.get_or_create(
-        id=projeto.id, 
-        defaults={'nome': projeto.titulo}
-    )
-    
-    # 3. Busca as mensagens usando a relação 'mensagens' definida no modelo Sala
-    # Dica: use '-data' para as mensagens mais novas aparecerem primeiro
     mensagens = sala.mensagens.all().order_by('data')
     
     if request.method == 'POST':
         texto = request.POST.get('texto', '').strip()
-        
         if texto:
-            # 4. Salva a mensagem na SALA e usando o campo AUTOR
-            sala.mensagens.create(
-                autor=request.user, 
-                texto=texto
-            )
+            sala.mensagens.create(autor=request.user, texto=texto)
             return redirect('chat_projeto', projeto_id=projeto.id)
             
     return render(request, 'chat.html', {
