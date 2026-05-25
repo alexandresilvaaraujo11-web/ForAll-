@@ -45,6 +45,7 @@ def chat_sala(request, sala_id):
     mensagens = sala.mensagens.all().order_by('-data')
 
     return render(request, 'chat.html', {
+        'sala_id': sala_id,
         'sala': sala,
         'mensagens': mensagens
     })

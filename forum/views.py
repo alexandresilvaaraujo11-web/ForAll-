@@ -84,7 +84,7 @@ def deletar_projeto(request, projeto_id):
 @login_required
 def chat_projeto(request, projeto_id):
     projeto = get_object_or_404(Projeto, id=projeto_id)
-    
+    sala, criada = Sala.objects.get_or_create(id=projeto.id, defaults={'nome': projeto.titulo})
     # Tentamos buscar as mensagens. Se der erro porque o modelo não existe, o sistema não quebra
     try:
         mensagens = projeto.mensagens.all().order_by('enviado_em')
@@ -100,8 +100,9 @@ def chat_projeto(request, projeto_id):
             except AttributeError:
                 pass
             
-    return render(request, 'forum/chat.html', {
+    return render(request, 'chat.html', {
         'projeto': projeto,
+        'sala': sala,            
         'mensagens': mensagens
     })
 
