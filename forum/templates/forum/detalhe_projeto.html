@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card" style="max-width: 700px; text-align: left;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h2 style="margin: 0;">{{ projeto.titulo }}</h2>
+            <span style="color: #666; font-size: 0.9rem;">{{ projeto.criado_em|date:"d/m/Y" }}</span>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px;">
+            {% for curso_vinculado in projeto.curso.all %}
+                <span class="badge" style="background: #002fff; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem;">
+                    {{ curso_vinculado.curso }}
+                </span>
+            {% empty %}
+                <span class="badge" style="background: #999; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem;">Sem curso</span>
+            {% endfor %}
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin-bottom: 20px;">
+
+        <h3 style="color: #333; margin-bottom: 10px;">Descrição do Projeto</h3>
+        <p style="color: #444; line-height: 1.6; font-size: 1.05rem; white-space: pre-line; word-wrap: break-word;">
+            {{ projeto.descricao }}
+        </p>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin-top: 20px; margin-bottom: 20px;">
+
+        <div style="display: flex; justify-content: space-between; color: #666; font-size: 0.9rem;">
+            <span><strong>Criador:</strong> {{ projeto.criador.username }}</span>
+            <span><strong>Participantes:</strong> {{ projeto.participantes_qtd }}</span>
+        </div>
+
+        <div style="margin-top: 30px; display: flex; gap: 10px;">
+            <a href="{% url 'lista_projetos' %}" class="auth-btn" style="background: #ffffff; text-decoration: none; text-align: center;">
+                Voltar para a Lista
+            </a>
+            
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

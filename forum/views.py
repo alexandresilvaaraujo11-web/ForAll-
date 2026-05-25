@@ -9,7 +9,6 @@ from chat.models import Sala
 
 
 def lista_projetos(request):
-
     projetos = Projeto.objects.all().order_by('-criado_em')
     for p in projetos:
         try:
@@ -51,7 +50,6 @@ def lista_projetos(request):
 
 @login_required
 def novo_projeto(request):
-    
     if request.method == 'POST':
         form = ForumForm(request.POST)
         if form.is_valid():
@@ -72,8 +70,79 @@ def novo_projeto(request):
         }
     return render(request, template_name, context)
 
+@login_required 
+def deletar_projeto(request, projeto_id):
+    projeto = get_object_or_404(Projeto, id=projeto_id)
+    if projeto.criador != request.user:
+        messages.error(request, "Você não tem permissão para deletar este projeto.")
+        return redirect('lista_projetos')     
+    if request.method == 'POST':
+        projeto.delete()
+        messages.success(request, "Projeto deletado com sucesso!") 
+    return redirect('lista_projetos')
 
-def delete_projeto(request, pk):
+@login_required
+def chat_projeto(request, projeto_id):
+    projeto = get_object_or_404(Projeto, id=projeto_id)
+    
+    # Tentamos buscar as mensagens. Se der erro porque o modelo não existe, o sistema não quebra
+    try:
+        mensagens = projeto.mensagens.all().order_by('enviado_em')
+    except AttributeError:
+        mensagens = []
+    
+    if request.method == 'POST':
+        texto = request.POST.get('texto', '').strip()
+        if texto and mensagens != []:
+            try:
+                projeto.mensagens.create(usuario=request.user, texto=texto)
+                return redirect('chat_projeto', projeto_id=projeto.id)
+            except AttributeError:
+                pass
+            
+    return render(request, 'forum/chat.html', {
+        'projeto': projeto,
+        'mensagens': mensagens
+    })
+
+@login_required
+def update_projeto(request, projeto_id):
+    
+    projeto = get_object_or_404(Projeto, id=projeto_id)
+    
+    #Garante que apenas o criador possa editar o próprio projeto
+    if projeto.criador != request.user:
+        messages.error(request, 'Você não tem permissão para editar este projeto.')
+        return redirect('lista_projetos')
+
+    if request.method == 'POST':
+        # 2. Passamos o request.POST e a 'instance=projeto' para o Django saber que é uma ATUALIZAÇÃO
+        form = ForumForm(request.POST, instance=projeto)
+        
+        if form.is_valid():
+            # Salva os dados de texto (titulo, descricao, etc.)
+            projeto = form.save(commit=False)
+            projeto.save()
+            
+            # 3. Atualiza as relações ManyToMany (Cursos)
+            cursos_selecionados = form.cleaned_data.get('curso')
+            if cursos_selecionados:
+                projeto.curso.set(cursos_selecionados)
+            else:
+                projeto.curso.clear() # Se ele desmarcar tudo, limpa as relações
+                
+            messages.success(request, 'Projeto atualizado com sucesso!')
+            return redirect('lista_projetos')
+    else:
+        form = ForumForm(instance=projeto)
+    
+    template_name = 'form_forum.html'
+    context = {
+        'form': form,
+        'projeto': projeto, # Passamos o projeto para o HTML saber se é uma edição ou criação
+    }
+    return render(request, template_name, context)
+
+def detalhe_projeto (request,pk):
     projeto = get_object_or_404(Projeto, pk=pk)
-    projeto.delete()
-    return redirect('lista_projetos') 
+    return render(request,'forum/detalhe_projeto.html', {'projeto': projeto})
