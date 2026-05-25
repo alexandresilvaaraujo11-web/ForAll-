@@ -6,10 +6,10 @@
 
 ## 🏛️ 1. Identificação da Equipe
 
-- **Nome da Equipe:**
-- **Nome dos Integrantes e Períodos:**
-- **Link do Repositório (GitHub/GitLab):**
-- **Link do Rascunho/Design (Figma/Lovable/Excalidraw):**
+- **Nome da Equipe:** ForAll
+- **Nome dos Integrantes e Períodos:** Alexandre, Alysson, Arthur, Misael
+- **Link do Repositório (GitHub/GitLab):** https://github.com/alexandresilvaaraujo11-web
+- **Link do Rascunho/Design (Figma/Lovable/Excalidraw):** https://www.figma.com/make/V8iVghBGqcRkv4VJaGM02v/Home-page-for-ForAll-forum?t=8JS0KjV9HiYhsPwE-1
 
 ---
 
@@ -51,7 +51,7 @@
 
 ### 5.1. Vocês já começaram o protótipo visual ou o código do MVP? Qual o percentual de conclusão estimado?
 
-- **Status:** ( ) Não começamos | ( ) Apenas rascunho visual | ( ) Código inicial iniciado | ( ) Mais da metade pronto
+- **Status:** ( ) Não começamos | ( ) Apenas rascunho visual | ( ) Código inicial iniciado | ( ) Mais da metade pronto | (X) Finalizado 
 
 ### 5.2. O projeto já funciona em alguma parte? O que já está codificado e operacional?
 
@@ -60,6 +60,7 @@
 ### 5.3. O que foi ou será "Mockado" (dados fictícios/estáticos)?
 
 > **Descrição:** (Identifiquem quais partes serão apenas simulação visual para a apresentação não quebrar, ex: o gráfico na tela é apenas uma imagem fixada).
+Não se aplica.
 
 ### 5.4. O que ainda falta finalizar obrigatoriamente para a entrega?
 
