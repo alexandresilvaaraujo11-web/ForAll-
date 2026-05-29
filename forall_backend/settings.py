@@ -44,6 +44,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    #whitenoise
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    #
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -125,3 +128,5 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # PRA FUNCIONAR OS USUÁRIOS
 AUTH_USER_MODEL = 'profiles.Profile'
 LOGIN_URL = 'profile:login'
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
