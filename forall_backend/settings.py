@@ -121,6 +121,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 # PRA FUNCIONAR OS USUÁRIOS
 AUTH_USER_MODEL = 'profiles.Profile'
 LOGIN_URL = 'profile:login'
